@@ -1,0 +1,25 @@
+services:
+  laravel-money:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel-money
+    restart: unless-stopped
+    working_dir: /var/www/laravel-money
+    volumes:
+      - .:/var/www/laravel-money
+      # - /var/www/laravel-money/vendor
+      # - /var/www/laravel-money/node_modules
+    networks:
+      - laravel
+    healthcheck:
+      test: ["CMD", "php-fpm", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+
+networks:
+  laravel:
+    external: true
+    name: laravel_shared
