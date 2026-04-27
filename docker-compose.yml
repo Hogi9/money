@@ -8,8 +8,6 @@ services:
     working_dir: /var/www/laravel-money
     volumes:
       - .:/var/www/laravel-money
-      # - /var/www/laravel-money/vendor
-      # - /var/www/laravel-money/node_modules
     networks:
       - laravel
     healthcheck:
