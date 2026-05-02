@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
@@ -40,6 +41,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::post('/profile/api-token/generate', [ApiTokenController::class, 'generate'])->name('api-token.generate');
+    Route::post('/profile/api-token/reset', [ApiTokenController::class, 'reset'])->name('api-token.reset');
+    Route::delete('/profile/api-token', [ApiTokenController::class, 'revoke'])->name('api-token.revoke');
 
     Route::resource('users', UserController::class)->except(['show']);
     Route::resource('roles', RoleController::class)->except(['show']);

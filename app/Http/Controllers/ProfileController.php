@@ -12,7 +12,8 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user()->load('roles', 'teams');
-        return view('profile.show', compact('user'));
+        $hasToken = $user->tokens()->exists();
+        return view('profile.show', compact('user', 'hasToken'));
     }
 
     public function update(Request $request)
