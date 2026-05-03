@@ -140,7 +140,7 @@ class AuthenticationController extends Controller
         $status = Password::sendResetLink(['email' => $user->email]);
 
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('success', 'Link reset password telah dikirim ke email kamu.');
+            return redirect()->route('login')->with('success', 'Link reset password telah dikirim ke email kamu.');
         }
 
         return back()->withErrors(['login' => __($status)])->onlyInput('login');
