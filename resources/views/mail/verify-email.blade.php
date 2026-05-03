@@ -58,7 +58,7 @@
 		<div class="card">
 			<h1>Verifikasi Email Kamu</h1>
 			<p>Halo, <strong>{{ $user->name }}</strong>!</p>
-			<p>Terima kasih telah mendaftar di <strong>Laravel Money</strong>. Klik tombol di bawah untuk memverifikasi alamat
+			<p>Terima kasih telah mendaftar di <strong>Fulgenz</strong>. Klik tombol di bawah untuk memverifikasi alamat
 				email kamu.</p>
 
 			<a href="{{ $url }}" class="btn">Verifikasi Email Sekarang</a>

@@ -58,7 +58,7 @@
 		<div class="card">
 			<h1>Reset Password</h1>
 			<p>Halo, <strong>{{ $user->name }}</strong>!</p>
-			<p>Kami menerima permintaan reset password untuk akun <strong>Laravel Money</strong> kamu. Klik tombol di bawah untuk
+			<p>Kami menerima permintaan reset password untuk akun <strong>Fulgenz</strong> kamu. Klik tombol di bawah untuk
 				membuat password baru.</p>
 
 			<a href="{{ $url }}" class="btn">Reset Password Sekarang</a>
