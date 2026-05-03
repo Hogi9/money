@@ -60,9 +60,9 @@
 						<input type="checkbox" name="remember" class="checkbox checkbox-primary checkbox-sm" />
 						<span class="text-sm text-base-content/70">Remember me</span>
 					</label>
-					{{-- <a href="{{ route('password.request') }}" class="text-sm text-primary hover:underline">
+					<a href="{{ route('password.request') }}" class="text-sm text-primary hover:underline">
 						Forget password?
-					</a> --}}
+					</a>
 				</div>
 
 				{{-- Submit --}}

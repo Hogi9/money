@@ -15,7 +15,17 @@ use App\Http\Controllers\TransactionNameController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+
+if (app()->isLocal()) {
+    Route::get('/mail-test', function () {
+        $email = request('email', 'test@example.com');
+        Mail::to($email)->send(new TestMail(recipientName: $email));
+        return "Test email sent to {$email}";
+    });
+}
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -31,10 +41,18 @@ Route::get('/logout',[AuthenticationController::class,'logout'])->name('logout')
 Route::get('/register',[AuthenticationController::class,'register'])->name('register');
 Route::post('/register',[AuthenticationController::class,'registerProcess'])->name('register.post');
 
-Route::get('/forget-password',[AuthenticationController::class,'resetPassword'])->name('password.request');
-Route::post('/forget-password',[AuthenticationController::class,'sendResetLink'])->name('password.email');
+Route::get('/forget-password', [AuthenticationController::class, 'resetPassword'])->name('password.request');
+Route::post('/forget-password', [AuthenticationController::class, 'sendResetLink'])->name('password.email');
+Route::get('/reset-password/{token}', [AuthenticationController::class, 'showResetPasswordForm'])->name('password.reset');
+Route::post('/reset-password', [AuthenticationController::class, 'processResetPassword'])->name('password.update');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware('auth')->group(function () {
+    Route::get('/email/verify', [AuthenticationController::class, 'verifyNotice'])->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [AuthenticationController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/verification-notification', [AuthenticationController::class, 'resendVerification'])->middleware('throttle:6,1')->name('verification.send');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/dashboard/wallets', [DashboardController::class, 'walletsPage'])->name('dashboard.wallets');
     Route::post('/dashboard/transactions', [DashboardController::class, 'transactionsPage'])->name('dashboard.transactions');

@@ -3,16 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthenticationController extends Controller
 {
     public function index()
     {
-        if(Auth::check()) {
+        if (Auth::check()) {
             return redirect('/dashboard');
         }
         return view('auth.login');
@@ -83,11 +88,35 @@ class AuthenticationController extends Controller
         ]);
 
         $user->assignRole('user');
+        $user->sendEmailVerificationNotification();
 
-        // Auth::login($user);
-
-        return redirect('/login')->with('success', 'Registration successful. Please log in.');
+        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan cek email kamu untuk verifikasi akun.');
     }
+
+    // ── Email Verification ────────────────────────────────────────────────────
+
+    public function verifyNotice()
+    {
+        return view('auth.verify-email');
+    }
+
+    public function verifyEmail(EmailVerificationRequest $request)
+    {
+        $request->fulfill();
+        return redirect()->route('dashboard')->with('success', 'Email berhasil diverifikasi!');
+    }
+
+    public function resendVerification(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('dashboard');
+        }
+
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('success', 'Link verifikasi telah dikirim ulang ke email kamu.');
+    }
+
+    // ── Password Reset ────────────────────────────────────────────────────────
 
     public function resetPassword()
     {
@@ -97,13 +126,56 @@ class AuthenticationController extends Controller
     public function sendResetLink(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'login' => ['required', 'string'],
         ]);
 
-        // Here you would typically send the reset link email using Laravel's built-in password reset functionality.
-        // For demonstration purposes, we'll just pretend we sent the email.
-        return redirect()
-            ->route('login')
-            ->with('success', 'Reset link has been sent to your email.');
+        $loginValue = $request->input('login');
+        $field = filter_var($loginValue, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $user = User::where($field, $loginValue)->first();
+
+        if (! $user) {
+            return back()->withErrors(['login' => 'Akun dengan email/username tersebut tidak ditemukan.'])->onlyInput('login');
+        }
+
+        $status = Password::sendResetLink(['email' => $user->email]);
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('success', 'Link reset password telah dikirim ke email kamu.');
+        }
+
+        return back()->withErrors(['login' => __($status)])->onlyInput('login');
+    }
+
+    public function showResetPasswordForm(Request $request, string $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->email,
+        ]);
+    }
+
+    public function processResetPassword(Request $request)
+    {
+        $request->validate([
+            'token'    => ['required'],
+            'email'    => ['required', 'email'],
+            'password' => ['required', 'min:8', 'confirmed'],
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill(['password' => Hash::make($password)])
+                     ->setRememberToken(Str::random(60));
+                $user->save();
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('success', 'Password berhasil direset! Silakan login.');
+        }
+
+        return back()->withErrors(['email' => __($status)]);
     }
 }

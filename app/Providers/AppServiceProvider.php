@@ -17,6 +17,9 @@ use App\Policies\RolePolicy;
 use App\Policies\TransactionNamePolicy;
 use App\Policies\TransactionPolicy;
 use App\Policies\WalletPolicy;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -47,6 +50,19 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Feedback::class, FeedbackPolicy::class);
 
         Menu::observe(MenuObserver::class);
+
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+            return (new MailMessage)
+                ->subject('Verify Your Email — Laravel Money')
+                ->view('mail.verify-email', ['url' => $url, 'user' => $notifiable]);
+        });
+
+        ResetPassword::toMailUsing(function ($notifiable, $token) {
+            $url = route('password.reset', ['token' => $token, 'email' => $notifiable->getEmailForPasswordReset()]);
+            return (new MailMessage)
+                ->subject('Reset Your Password — Laravel Money')
+                ->view('mail.reset-password', ['url' => $url, 'user' => $notifiable]);
+        });
 
         View::composer('template.sidebar', function ($view) {
             $menus = Menu::with('children')
