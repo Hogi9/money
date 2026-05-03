@@ -57,16 +57,25 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Nama</th>
 						<th>Kategori</th>
 						<th>Tipe</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($transactionNames as $tn)
 						<tr class="row-hover">
 							<td>{{ $transactionNames->firstItem() + $loop->index }}</td>
+							<td class="font-medium">{{ $tn->name }}</td>
+							<td>{{ $tn->category->name ?? '-' }}</td>
+							<td>
+								@if ($tn->category?->type === 'income')
+									<span class="badge badge-soft badge-success text-xs">Income</span>
+								@else
+									<span class="badge badge-soft badge-error text-xs">Outcome</span>
+								@endif
+							</td>
 							<td>
 								@can('edit-transaction-names')
 									<a href="{{ route('transaction-names.edit', $tn) }}"
@@ -82,15 +91,6 @@
 										<span class="icon-[tabler--trash] size-5"></span>
 									</button>
 								@endcan
-							</td>
-							<td class="font-medium">{{ $tn->name }}</td>
-							<td>{{ $tn->category->name ?? '-' }}</td>
-							<td>
-								@if ($tn->category?->type === 'income')
-									<span class="badge badge-soft badge-success text-xs">Income</span>
-								@else
-									<span class="badge badge-soft badge-error text-xs">Outcome</span>
-								@endif
 							</td>
 						</tr>
 					@empty

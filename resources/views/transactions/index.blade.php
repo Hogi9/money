@@ -132,34 +132,19 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Tanggal</th>
 						<th>Tipe</th>
 						<th>Jumlah</th>
 						<th>Dompet</th>
 						<th>Kategori / Nama</th>
 						<th>Deskripsi</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($transactions as $trx)
 						<tr class="row-hover">
 							<td>{{ $transactions->firstItem() + $loop->index }}</td>
-							<td>
-								@can('edit-transactions')
-									<a href="{{ route('transactions.edit', $trx) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
-										aria-label="Edit">
-										<span class="icon-[tabler--pencil] size-5"></span>
-									</a>
-								@endcan
-								@can('delete-transactions')
-									<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error" aria-haspopup="dialog"
-										aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
-										data-action="{{ route('transactions.destroy', $trx) }}">
-										<span class="icon-[tabler--trash] size-5"></span>
-									</button>
-								@endcan
-							</td>
 							<td class="whitespace-nowrap">{{ $trx->date->format('d M Y') }}</td>
 							<td>
 								@if ($trx->type === 'income')
@@ -204,6 +189,21 @@
 								@endif
 							</td>
 							<td class="text-base-content/70 max-w-xs truncate">{{ $trx->description ?? '-' }}</td>
+							<td>
+								@can('edit-transactions')
+									<a href="{{ route('transactions.edit', $trx) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
+										aria-label="Edit">
+										<span class="icon-[tabler--pencil] size-5"></span>
+									</a>
+								@endcan
+								@can('delete-transactions')
+									<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error" aria-haspopup="dialog"
+										aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
+										data-action="{{ route('transactions.destroy', $trx) }}">
+										<span class="icon-[tabler--trash] size-5"></span>
+									</button>
+								@endcan
+							</td>
 						</tr>
 					@empty
 						<tr>

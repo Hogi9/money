@@ -48,17 +48,27 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Nama</th>
 						<th>Tipe</th>
 						<th>Deskripsi</th>
 						<th>Jml. Nama Transaksi</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($categories as $category)
 						<tr class="row-hover">
 							<td>{{ $categories->firstItem() + $loop->index }}</td>
+							<td class="font-medium">{{ $category->name }}</td>
+							<td>
+								@if ($category->type === 'income')
+									<span class="badge badge-soft badge-success text-xs">Income</span>
+								@else
+									<span class="badge badge-soft badge-error text-xs">Outcome</span>
+								@endif
+							</td>
+							<td class="text-base-content/70">{{ $category->description ?? '-' }}</td>
+							<td>{{ $category->transaction_names_count ?? $category->transactionNames()->count() }}</td>
 							<td>
 								@can('edit-categories')
 									<a href="{{ route('categories.edit', $category) }}"
@@ -75,16 +85,6 @@
 									</button>
 								@endcan
 							</td>
-							<td class="font-medium">{{ $category->name }}</td>
-							<td>
-								@if ($category->type === 'income')
-									<span class="badge badge-soft badge-success text-xs">Income</span>
-								@else
-									<span class="badge badge-soft badge-error text-xs">Outcome</span>
-								@endif
-							</td>
-							<td class="text-base-content/70">{{ $category->description ?? '-' }}</td>
-							<td>{{ $category->transaction_names_count ?? $category->transactionNames()->count() }}</td>
 						</tr>
 					@empty
 						<tr>

@@ -48,17 +48,30 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Nama Dompet</th>
 						<th>Saldo</th>
 						<th>Deskripsi</th>
 						<th>Dibuat</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($wallets as $wallet)
 						<tr class="row-hover">
 							<td>{{ $wallets->firstItem() + $loop->index }}</td>
+							<td>
+								<div class="flex items-center gap-2">
+									<span class="icon-[tabler--wallet] size-5 text-primary shrink-0"></span>
+									<span class="font-medium">{{ $wallet->name }}</span>
+								</div>
+							</td>
+							<td>
+								<span class="{{ $wallet->balance >= 0 ? 'text-success' : 'text-error' }} font-semibold">
+									Rp {{ number_format($wallet->balance, 0, ',', '.') }}
+								</span>
+							</td>
+							<td class="text-base-content/70">{{ $wallet->description ?? '-' }}</td>
+							<td>{{ $wallet->created_at->format('d M Y') }}</td>
 							<td>
 								@can('edit-wallets')
 									<a href="{{ route('wallets.edit', $wallet) }}"
@@ -75,19 +88,6 @@
 									</button>
 								@endcan
 							</td>
-							<td>
-								<div class="flex items-center gap-2">
-									<span class="icon-[tabler--wallet] size-5 text-primary shrink-0"></span>
-									<span class="font-medium">{{ $wallet->name }}</span>
-								</div>
-							</td>
-							<td>
-								<span class="{{ $wallet->balance >= 0 ? 'text-success' : 'text-error' }} font-semibold">
-									Rp {{ number_format($wallet->balance, 0, ',', '.') }}
-								</span>
-							</td>
-							<td class="text-base-content/70">{{ $wallet->description ?? '-' }}</td>
-							<td>{{ $wallet->created_at->format('d M Y') }}</td>
 						</tr>
 					@empty
 						<tr>

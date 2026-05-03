@@ -37,16 +37,19 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Permission Name</th>
 						<th>Guard</th>
 						<th>Created</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($permissions as $permission)
 						<tr class="row-hover">
 							<td>{{ $permissions->firstItem() + $loop->index }}</td>
+							<td class="font-medium">{{ $permission->name }}</td>
+							<td><span class="badge badge-soft badge-info text-xs">{{ $permission->guard_name }}</span></td>
+							<td>{{ $permission->created_at->format('d M Y') }}</td>
 							<td>
 								@can('edit-permissions')
 									<a href="{{ route('permissions.edit', $permission->id) }}"
@@ -62,9 +65,6 @@
 									</button>
 								@endcan
 							</td>
-							<td class="font-medium">{{ $permission->name }}</td>
-							<td><span class="badge badge-soft badge-info text-xs">{{ $permission->guard_name }}</span></td>
-							<td>{{ $permission->created_at->format('d M Y') }}</td>
 						</tr>
 					@empty
 						<tr>

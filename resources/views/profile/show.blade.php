@@ -9,9 +9,11 @@
 		<div id="token-alert" class="alert alert-success mb-6 rounded-sm flex items-start gap-3">
 			<span class="icon-[tabler--circle-check] size-5 mt-0.5 shrink-0"></span>
 			<div class="flex-1 min-w-0">
-				<p class="font-semibold text-sm mb-1">API Token {{ session('success') ? 'Reset' : 'Generated' }} — copy it now, it won't be shown again.</p>
+				<p class="font-semibold text-sm mb-1">API Token {{ session('success') ? 'Reset' : 'Generated' }} — copy it now, it
+					won't be shown again.</p>
 				<div class="flex items-center gap-2">
-					<code id="plain-token" class="break-all text-xs font-mono bg-black/10 rounded px-2 py-1 flex-1">{{ session('api_token') }}</code>
+					<code id="plain-token"
+						class="break-all text-xs font-mono bg-black/10 rounded px-2 py-1 flex-1">{{ session('api_token') }}</code>
 					<button type="button" onclick="copyToken()" class="btn btn-xs btn-ghost shrink-0" title="Copy">
 						<span class="icon-[tabler--copy] size-4"></span>
 					</button>
@@ -175,17 +177,20 @@
 
 		<div class="divider text-xs text-base-content/40 my-4">API Endpoints</div>
 		<div class="space-y-1.5 text-sm font-mono">
-			@foreach ([
-				['GET', '/api/user', 'Authenticated user info'],
-				['GET', '/api/wallets', 'List wallets'],
-				['GET', '/api/categories', 'List categories'],
-				['GET', '/api/transactions', 'List transactions (paginated)'],
-			] as [$method, $path, $label])
-				<div class="flex items-center gap-2">
-					<span class="badge badge-soft rounded-sm text-xs w-12 text-center
-						{{ $method === 'GET' ? 'badge-info' : 'badge-success' }}">{{ $method }}</span>
-					<code class="text-xs text-base-content/70">{{ config('app.url') }}{{ $path }}</code>
-					<span class="text-xs text-base-content/40 hidden md:inline">— {{ $label }}</span>
+			@foreach ([['GET', '/api/user', 'Authenticated user info'], ['GET', '/api/wallets', 'List wallets'], ['GET', '/api/categories', 'List categories'], ['GET', '/api/transactions', 'List transactions (paginated)'], ['POST', '/api/transactions', 'Create transactions']] as [$method, $path, $label])
+				<div class="flex flex-row w-full items-start gap-2">
+					<p
+						class="badge badge-soft rounded-sm text-xs w-12 text-center flex-none mt-0.5
+        {{ $method === 'GET' ? 'badge-info' : 'badge-success' }}">
+						{{ $method }}
+					</p>
+
+					<div class="text-xs leading-relaxed break-all">
+						<span class="text-base-content/70 font-mono">{{ config('app.url') }}{{ $path }}</span>
+						<span class="text-base-content/40 hidden md:inline ml-1">
+							— {{ $label }}
+						</span>
+					</div>
 				</div>
 			@endforeach
 		</div>
@@ -193,19 +198,19 @@
 @endsection
 
 @push('scripts')
-<script>
-function copyToken() {
-    const text = document.getElementById('plain-token').textContent.trim();
-    navigator.clipboard.writeText(text).then(() => {
-        const alert = document.getElementById('token-alert');
-        if (alert) {
-            const note = document.createElement('p');
-            note.className = 'text-xs mt-1 font-medium';
-            note.textContent = 'Copied to clipboard!';
-            alert.appendChild(note);
-            setTimeout(() => note.remove(), 2000);
-        }
-    });
-}
-</script>
+	<script>
+		function copyToken() {
+			const text = document.getElementById('plain-token').textContent.trim();
+			navigator.clipboard.writeText(text).then(() => {
+				const alert = document.getElementById('token-alert');
+				if (alert) {
+					const note = document.createElement('p');
+					note.className = 'text-xs mt-1 font-medium';
+					note.textContent = 'Copied to clipboard!';
+					alert.appendChild(note);
+					setTimeout(() => note.remove(), 2000);
+				}
+			});
+		}
+	</script>
 @endpush

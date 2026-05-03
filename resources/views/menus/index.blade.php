@@ -35,7 +35,6 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Actions</th>
                         <th>Name</th>
                         <th>Icon</th>
                         <th>Route</th>
@@ -44,28 +43,13 @@
                         <th>Permission</th>
                         <th>Order</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($menus as $menu)
                         <tr class="row-hover">
                             <td>{{ $menus->firstItem() + $loop->index }}</td>
-                            <td>
-                                @can('update', $menu)
-                                    <a href="{{ route('menus.edit', $menu->id) }}"
-                                        class="btn btn-circle btn-text btn-sm hover:text-warning" aria-label="Edit">
-                                        <span class="icon-[tabler--pencil] size-5"></span>
-                                    </a>
-                                @endcan
-                                @can('delete', $menu)
-                                    <button type="button" class="delete-button btn btn-circle btn-text btn-sm hover:text-error"
-                                        aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete"
-                                        data-overlay="#modal-delete"
-                                        data-action="{{ route('menus.destroy', $menu->id) }}">
-                                        <span class="icon-[tabler--trash] size-5"></span>
-                                    </button>
-                                @endcan
-                            </td>
                             <td class="font-medium">
                                 <div class="flex items-center gap-2">
                                     <iconify-icon icon="{{ $menu->icon }}" width="16" height="16" class="text-base-content/60"></iconify-icon>
@@ -102,6 +86,22 @@
                                 @else
                                     <span class="badge badge-soft badge-error text-xs">Inactive</span>
                                 @endif
+                            </td>
+                            <td>
+                                @can('update', $menu)
+                                    <a href="{{ route('menus.edit', $menu->id) }}"
+                                        class="btn btn-circle btn-text btn-sm hover:text-warning" aria-label="Edit">
+                                        <span class="icon-[tabler--pencil] size-5"></span>
+                                    </a>
+                                @endcan
+                                @can('delete', $menu)
+                                    <button type="button" class="delete-button btn btn-circle btn-text btn-sm hover:text-error"
+                                        aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete"
+                                        data-overlay="#modal-delete"
+                                        data-action="{{ route('menus.destroy', $menu->id) }}">
+                                        <span class="icon-[tabler--trash] size-5"></span>
+                                    </button>
+                                @endcan
                             </td>
                         </tr>
                     @empty

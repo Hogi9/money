@@ -37,32 +37,17 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Role Name</th>
 						<th>Guard</th>
 						<th>Permissions</th>
 						<th>Created</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($roles as $role)
 						<tr class="row-hover">
 							<td>{{ $roles->firstItem() + $loop->index }}</td>
-							<td>
-								@can('edit-roles')
-									<a href="{{ route('roles.edit', $role->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
-										aria-label="Edit">
-										<span class="icon-[tabler--pencil] size-5"></span>
-									</a>
-								@endcan
-								@can('delete-roles')
-									<button type="button" class="delete-button btn btn-circle btn-text btn-sm hover:text-error"
-										aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
-										data-action="{{ route('roles.destroy', $role->id) }}">
-										<span class="icon-[tabler--trash] size-5"></span>
-									</button>
-								@endcan
-							</td>
 							<td class="font-medium">{{ $role->name }}</td>
 							<td><span class="badge badge-soft badge-info text-xs">{{ $role->guard_name }}</span></td>
 							<td>
@@ -78,6 +63,21 @@
 								</div>
 							</td>
 							<td>{{ $role->created_at->format('d M Y') }}</td>
+							<td>
+								@can('edit-roles')
+									<a href="{{ route('roles.edit', $role->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
+										aria-label="Edit">
+										<span class="icon-[tabler--pencil] size-5"></span>
+									</a>
+								@endcan
+								@can('delete-roles')
+									<button type="button" class="delete-button btn btn-circle btn-text btn-sm hover:text-error"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
+										data-action="{{ route('roles.destroy', $role->id) }}">
+										<span class="icon-[tabler--trash] size-5"></span>
+									</button>
+								@endcan
+							</td>
 						</tr>
 					@empty
 						<tr>

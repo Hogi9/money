@@ -51,35 +51,18 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Name</th>
 						<th>Username</th>
 						<th>Email</th>
 						<th>Role</th>
 						<th>Joined</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($users as $user)
 						<tr class="row-hover">
 							<td>{{ $users->firstItem() + $loop->index }}</td>
-							<td>
-								@can('edit-users')
-									<a href="{{ route('users.edit', $user->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
-										aria-label="Edit">
-										<span class="icon-[tabler--pencil] size-5"></span>
-									</a>
-								@endcan
-								@can('delete-users')
-									@if ($user->id !== auth()->id())
-										<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error" aria-haspopup="dialog"
-											aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
-											data-action="{{ route('users.destroy', $user->id) }}">
-											<span class="icon-[tabler--trash] size-5"></span>
-										</button>
-									@endif
-								@endcan
-							</td>
 							<td>
 								<div class="flex items-center gap-2">
 									<div
@@ -106,6 +89,23 @@
 								@endif
 							</td>
 							<td>{{ $user->created_at->format('d M Y') }}</td>
+							<td>
+								@can('edit-users')
+									<a href="{{ route('users.edit', $user->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
+										aria-label="Edit">
+										<span class="icon-[tabler--pencil] size-5"></span>
+									</a>
+								@endcan
+								@can('delete-users')
+									@if ($user->id !== auth()->id())
+										<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error" aria-haspopup="dialog"
+											aria-expanded="false" aria-controls="modal-delete" data-overlay="#modal-delete"
+											data-action="{{ route('users.destroy', $user->id) }}">
+											<span class="icon-[tabler--trash] size-5"></span>
+										</button>
+									@endif
+								@endcan
+							</td>
 						</tr>
 					@empty
 						<tr>

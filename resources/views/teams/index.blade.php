@@ -32,12 +32,12 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Group Name</th>
 						<th>Description</th>
 						<th>Owner</th>
 						<th>Members</th>
 						<th>Your Role</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -48,19 +48,6 @@
 						@endphp
 						<tr class="row-hover">
 							<td>{{ $teams->firstItem() + $loop->index }}</td>
-							<td class="flex items-center gap-1">
-								<a href="{{ route('teams.show', $team->id) }}" class="btn btn-circle btn-text btn-sm hover:text-info"
-									aria-label="Detail">
-									<span class="icon-[tabler--eye] size-5"></span>
-								</a>
-								@can('update', $team)
-									<a href="{{ route('teams.edit', $team->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
-										aria-label="Edit">
-										<span class="icon-[tabler--pencil] size-5"></span>
-									</a>
-								@endcan
-								@include('teams.delete.button-icon', ['team' => $team])
-							</td>
 							<td class="font-medium">{{ $team->name }}</td>
 							<td class="text-base-content/70 text-sm max-w-xs truncate">{{ $team->description ?? '-' }}</td>
 							<td>
@@ -86,6 +73,19 @@
 								@else
 									<span class="badge badge-soft badge-ghost text-xs">-</span>
 								@endif
+							</td>
+							<td class="flex items-center gap-1">
+								<a href="{{ route('teams.show', $team->id) }}" class="btn btn-circle btn-text btn-sm hover:text-info"
+									aria-label="Detail">
+									<span class="icon-[tabler--eye] size-5"></span>
+								</a>
+								@can('update', $team)
+									<a href="{{ route('teams.edit', $team->id) }}" class="btn btn-circle btn-text btn-sm hover:text-warning"
+										aria-label="Edit">
+										<span class="icon-[tabler--pencil] size-5"></span>
+									</a>
+								@endcan
+								@include('teams.delete.button-icon', ['team' => $team])
 							</td>
 						</tr>
 					@empty

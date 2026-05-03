@@ -45,32 +45,18 @@
 				<thead>
 					<tr>
 						<th>#</th>
-						<th>Actions</th>
 						<th>Pengirim</th>
 						<th>Jenis</th>
 						<th>Judul</th>
 						<th>Status</th>
 						<th>Tanggal</th>
+						<th>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
 					@forelse($feedbacks as $feedback)
 						<tr class="row-hover">
 							<td>{{ $feedbacks->firstItem() + $loop->index }}</td>
-							<td>
-								<a href="{{ route('feedbacks.show', $feedback) }}"
-									class="btn btn-circle btn-text btn-sm hover:text-info" aria-label="Detail">
-									<span class="icon-[tabler--eye] size-5"></span>
-								</a>
-								@can('delete-feedbacks')
-									<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error"
-										aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete"
-										data-overlay="#modal-delete"
-										data-action="{{ route('feedbacks.destroy', $feedback) }}">
-										<span class="icon-[tabler--trash] size-5"></span>
-									</button>
-								@endcan
-							</td>
 							<td class="font-medium">{{ $feedback->user->name }}</td>
 							<td>
 								@if ($feedback->type === 'kritik')
@@ -90,6 +76,20 @@
 								@endif
 							</td>
 							<td class="text-base-content/70 text-sm">{{ $feedback->created_at->format('d M Y') }}</td>
+							<td>
+								<a href="{{ route('feedbacks.show', $feedback) }}"
+									class="btn btn-circle btn-text btn-sm hover:text-info" aria-label="Detail">
+									<span class="icon-[tabler--eye] size-5"></span>
+								</a>
+								@can('delete-feedbacks')
+									<button type="button" class="delete-btn btn btn-circle btn-text btn-sm hover:text-error"
+										aria-haspopup="dialog" aria-expanded="false" aria-controls="modal-delete"
+										data-overlay="#modal-delete"
+										data-action="{{ route('feedbacks.destroy', $feedback) }}">
+										<span class="icon-[tabler--trash] size-5"></span>
+									</button>
+								@endcan
+							</td>
 						</tr>
 					@empty
 						<tr>
